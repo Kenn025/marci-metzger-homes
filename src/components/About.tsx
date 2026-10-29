@@ -5,15 +5,15 @@ import { marciImg, PHONE, TEL } from "@/lib/constants";
 export function About() {
   const imageReveal = useSectionReveal<HTMLDivElement>({
     direction: "left",
-    distance: 40,
+    distance: 28,
     duration: "0.85s",
   });
 
   const contentReveal = useSectionReveal<HTMLDivElement>({
     direction: "right",
-    distance: 40,
+    distance: 28,
     duration: "0.85s",
-    delay: "0.15s",
+    delay: "0.12s",
   });
 
   return (
@@ -33,7 +33,7 @@ export function About() {
           className="relative mx-auto w-full max-w-sm pl-4 pt-4 sm:max-w-md md:col-span-5 md:max-w-none md:pl-6 md:pt-6"
         >
           <div
-            className="absolute inset-0 bottom-4 right-4 rounded-sm bg-sand md:bottom-6 md:right-6"
+            className="absolute inset-0 bottom-4 right-4 rounded-lg bg-sand md:bottom-6 md:right-6"
             aria-hidden="true"
           />
           <img
@@ -44,7 +44,7 @@ export function About() {
             height={625}
             loading="lazy"
             decoding="async"
-            className="relative aspect-[4/5] w-full rounded-sm object-cover object-top shadow-soft transition-transform duration-700 hover:scale-[1.01]"
+            className="relative aspect-[4/5] w-full rounded-lg object-cover object-top shadow-soft transition-transform duration-700 hover:scale-[1.01] active:scale-[1.01]"
           />
         </div>
 
@@ -66,30 +66,28 @@ export function About() {
           >
             Realtor for nearly 3 decades
           </p>
+
           <p
             itemProp="description"
             className="mt-6 text-[0.9375rem] leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg"
           >
-            Our team works hard every day to grow and learn, so that we may continue to excel in our
-            market. Our clients deserve our best — and we want to make sure our best is better every
-            year.
+            Marci was a REALTOR, then licensed Broker, in Washington State. Now, she is enjoying the
+            sunshine, and helping clients in Southern Nevada. Having helped buyers and sellers in
+            many markets since 1995, she is a wealth of knowledge.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 sm:mt-10">
-            <a
-              href="#contact"
-              className="btn btn-primary max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] shadow-sm hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Get It Sold
-            </a>
-            <a
-              href={TEL}
-              aria-label={`Call Marci Metzger at ${PHONE}`}
-              className="flex min-h-11 items-center gap-2 text-sm font-semibold transition-colors sm:text-base hover:text-primary"
-            >
-              <Phone className="h-4 w-4 text-primary" aria-hidden="true" />
-              <span>{PHONE}</span>
-            </a>
-          </div>
+
+          <h3 className="mt-8 font-display text-xl sm:mt-10 sm:text-3xl">In Her Words</h3>
+          <blockquote className="mt-3 space-y-3 border-l-2 border-primary/60 pl-4 text-[0.9375rem] leading-relaxed text-muted-foreground sm:mt-4 sm:pl-5 sm:text-base">
+            <p>
+              “I love that small-town feeling that our community offers. Spectacular golf courses,
+              parks, pool, and easy access to Las Vegas make Pahrump a great place to call home.
+              Working or retired, fast-paced or looking to relax... there's a place for you here!
+            </p>
+            <p>
+              I enjoy living in the Mountain Falls community and will strive to find you a home that
+              will suit you just as this community does me.”
+            </p>
+          </blockquote>
         </div>
       </div>
     </section>

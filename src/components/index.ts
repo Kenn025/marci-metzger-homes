@@ -9,3 +9,4 @@ export { Services } from "./Services";
 export { Affiliations } from "./Affiliations";
 export { Contact } from "./Contact";
 export { Footer } from "./Footer";
+export { CookieConsent } from "./CookieConsent";

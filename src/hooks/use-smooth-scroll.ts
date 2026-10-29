@@ -12,7 +12,12 @@ export function useSmoothScroll(headerOffset = 0) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const lenis = new Lenis({ autoRaf: true, duration: 1.1, smoothWheel: true });
+    const lenis = new Lenis({
+      autoRaf: true,
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
 
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0) return;

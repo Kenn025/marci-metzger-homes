@@ -4,8 +4,8 @@ import { SERVICES } from "@/lib/constants";
 export function Services() {
   const headerReveal = useSectionReveal<HTMLDivElement>({
     direction: "up",
-    distance: 30,
-    duration: "0.7s",
+    distance: 24,
+    duration: "0.8s",
   });
 
   return (
@@ -41,9 +41,9 @@ export function Services() {
 function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; index: number }) {
   const cardReveal = useSectionReveal<HTMLElement>({
     direction: "up",
-    distance: 40,
-    delay: `${index * 0.15}s`,
-    duration: "0.75s",
+    distance: 28,
+    delay: `${index * 0.12}s`,
+    duration: "0.8s",
   });
 
   return (
@@ -52,7 +52,7 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
       style={cardReveal.style}
       itemScope
       itemType="https://schema.org/Service"
-      className="group bg-card shadow-soft md:grid md:grid-cols-2 lg:block rounded-sm overflow-hidden transition-all duration-300 hover:shadow-md"
+      className="group bg-card shadow-md md:grid md:grid-cols-2 lg:block rounded-lg overflow-hidden transition-all duration-300 hover:shadow-soft"
     >
       <div className="overflow-hidden rounded-sm">
         <img
@@ -63,7 +63,7 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
           decoding="async"
           width={600}
           height={450}
-          className="aspect-[4/3] w-full rounded-sm object-cover transition-transform duration-700 ease-out group-hover:scale-105 md:aspect-auto md:h-full md:min-h-64 lg:aspect-[4/3] lg:h-auto lg:min-h-0"
+          className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-active:scale-105 md:aspect-auto md:h-full md:min-h-64 lg:aspect-[4/3] lg:h-auto lg:min-h-0"
         />
       </div>
       <div className="p-6 sm:p-8 md:self-center">

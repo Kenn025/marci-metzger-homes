@@ -1,11 +1,38 @@
 import { Phone, ArrowRight } from "lucide-react";
-import { useSectionReveal } from "@/hooks";
+import { useSectionReveal, useCountUp } from "@/hooks";
 import { heroImg, STATS, TEL } from "@/lib/constants";
+
+function AnimatedStat({ value }: { value: string }) {
+  const match = value.match(/^([^0-9.]*)([0-9.]+)(.*)$/);
+  if (!match) return <>{value}</>;
+
+  const prefix = match[1] ?? "";
+  const targetNum = parseFloat(match[2] ?? "0");
+  const suffix = match[3] ?? "";
+  const decimals = match[2]?.includes(".") ? match[2].split(".")[1]?.length ?? 0 : 0;
+
+  const count = useCountUp(targetNum, 1600, true, decimals);
+
+  return (
+    <span className="relative inline-block tabular-nums">
+      {/* Ghost text reserves the exact final width so columns and borders never shift */}
+      <span className="invisible select-none" aria-hidden="true">
+        {value}
+      </span>
+      <span className="absolute inset-0 flex items-center justify-center min-[480px]:justify-start">
+        {prefix}
+        {count.toFixed(decimals)}
+        {suffix}
+      </span>
+    </span>
+  );
+}
 
 export function Hero() {
   const { ref, style } = useSectionReveal<HTMLDivElement>({
     direction: "none",
-    duration: "1.1s",
+    duration: "0.85s",
+    initialInView: true,
   });
 
   return (
@@ -73,9 +100,9 @@ export function Hero() {
                   : ""
               }`}
             >
-              <dt className="mt-1 text-[0.7rem] text-white/75 sm:text-sm">{l}</dt>
-              <dd className="font-display text-2xl sm:text-4xl md:text-5xl font-medium tracking-tight">
-                {v}
+              <dt className="mt-1 text-xs text-white/75 sm:text-sm">{l}</dt>
+              <dd className="font-display text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight">
+                <AnimatedStat value={v} />
               </dd>
             </div>
           ))}

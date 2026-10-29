@@ -11,7 +11,13 @@ import {
   Affiliations,
   Contact,
   Footer,
+  CookieConsent,
 } from "@/components";
+import { heroImg } from "@/lib/constants";
+import { getJsonLd, SITE_URL } from "@/lib/jsonLd";
+
+const jsonLd = getJsonLd();
+const ogImageUrl = `${SITE_URL}${heroImg}`;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,25 +34,60 @@ export const Route = createFileRoute("/")({
           "Pahrump realtor, Pahrump NV real estate, Marci Metzger, The Ridge Realty Group, homes for sale Pahrump, Nye County properties, desert estates, real estate agent Pahrump",
       },
       { name: "author", content: "Marci Metzger" },
-      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+      {
+        name: "robots",
+        content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      },
+      // Geographic / Local SEO
+      { name: "geo.region", content: "US-NV" },
+      { name: "geo.placename", content: "Pahrump, Nevada" },
+      { name: "geo.position", content: "36.2083;-115.9839" },
+      { name: "ICBM", content: "36.2083, -115.9839" },
       // Open Graph
       { property: "og:site_name", content: "Marci Metzger Homes" },
-      { property: "og:title", content: "Marci Metzger Homes | Pahrump Realtor" },
+      {
+        property: "og:title",
+        content: "Marci Metzger Homes | Pahrump, NV Realtor – The Ridge Realty Group",
+      },
       {
         property: "og:description",
         content:
           "Don't just list it — get it SOLD. Nearly 3 decades helping families buy and sell homes in Pahrump, Nevada.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:image", content: ogImageUrl },
+      { property: "og:image:secure_url", content: ogImageUrl },
+      { property: "og:image:type", content: "image/webp" },
+      { property: "og:image:width", content: "1920" },
+      { property: "og:image:height", content: "1080" },
+      {
+        property: "og:image:alt",
+        content: "Scenic views of Pahrump, Nevada – Marci Metzger Homes",
+      },
+      { property: "og:locale", content: "en_US" },
       // Twitter Card
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Marci Metzger Homes | Pahrump, NV Realtor" },
+      {
+        name: "twitter:title",
+        content: "Marci Metzger Homes | Pahrump, NV Realtor – The Ridge Realty Group",
+      },
       {
         name: "twitter:description",
         content:
           "Nearly 3 decades helping families buy and sell in the Pahrump Valley — with local knowledge you can't search for.",
       },
+      { name: "twitter:image", content: ogImageUrl },
+      {
+        name: "twitter:image:alt",
+        content: "Scenic views of Pahrump, Nevada – Marci Metzger Homes",
+      },
+      // Schema.org JSON-LD structured data for search engines
+      {
+        "script:ld+json": jsonLd,
+      },
     ],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: HomePage,
 });
@@ -65,6 +106,12 @@ function HomePage() {
         Skip to main content
       </a>
 
+      {/* JSON-LD Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Header />
 
       <main id="main-content" tabIndex={-1} className="outline-none">
@@ -79,6 +126,7 @@ function HomePage() {
       </main>
 
       <Footer />
+      <CookieConsent />
     </div>
   );
 }

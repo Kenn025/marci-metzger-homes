@@ -11,7 +11,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import favicon from "../assets/site/the-ridge-realty-group.jpg";
+import favicon from "../assets/site/the-ridge-realty-group.webp";
 
 function NotFoundComponent() {
   return (
@@ -72,14 +72,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#c25e2e" },
       { title: "Marci Metzger Homes | Pahrump Realtor" },
       { name: "description", content: "Marci Metzger – The Ridge Realty Group, Pahrump, Nevada." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "icon", type: "image/jpeg", href: favicon },
+      { rel: "icon", type: "image/webp", href: favicon },
       { rel: "apple-touch-icon", href: favicon },
+      { rel: "canonical", href: "https://marci-metzger-pahrump.vercel.app/" },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },

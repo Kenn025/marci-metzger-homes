@@ -47,7 +47,7 @@ export function Footer() {
               <a
                 key={n.href}
                 href={n.href}
-                className="eyebrow max-sm:!text-[0.65rem] max-sm:!tracking-[0.18em] py-2 text-ink-foreground/75 transition-colors hover:text-accent"
+                className="eyebrow max-sm:!text-[0.65rem] max-sm:!tracking-[0.18em] py-2 text-ink-foreground/75 transition-colors hover:text-primary"
               >
                 {n.label}
               </a>
@@ -63,7 +63,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Visit Marci Metzger on ${s.name}`}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-ink-foreground/80 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white sm:h-11 sm:w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-ink-foreground/80 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white active:scale-95 active:bg-primary active:text-white sm:h-11 sm:w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <FontAwesomeIcon
                   icon={s.icon}
@@ -85,7 +85,7 @@ export function Footer() {
                 href="https://kennethfrancisco.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-ink-foreground/80 underline-offset-4 transition-colors hover:text-accent hover:underline"
+                className="text-ink-foreground/80 underline-offset-4 transition-colors hover:text-primary hover:underline"
               >
                 Kenneth Francisco
               </a>

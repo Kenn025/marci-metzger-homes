@@ -1,4 +1,11 @@
-import { useState, useId, type FormEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useId,
+  type FormEvent,
+  type FocusEvent,
+  type FormEvent as ReactFormEvent,
+} from "react";
 import { MapPin, Phone, Clock, ArrowRight, Mail } from "lucide-react";
 import { useSectionReveal } from "@/hooks";
 import { Field } from "./Field";
@@ -6,34 +13,88 @@ import { PHONE, TEL } from "@/lib/constants";
 
 export function Contact() {
   const [status, setStatus] = useState<"idle" | "error" | "sent">("idle");
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  // True only while the textarea is focused AND its content overflows
+  const [messageScrollable, setMessageScrollable] = useState(false);
+
   const nameId = useId();
+  const nameErrorId = useId();
   const emailId = useId();
-  const phoneId = useId();
+  const emailErrorId = useId();
   const messageId = useId();
-  const errorId = useId();
 
   const detailsReveal = useSectionReveal<HTMLDivElement>({
     direction: "left",
-    distance: 35,
-    duration: "0.8s",
+    distance: 28,
+    duration: "0.85s",
   });
 
   const formReveal = useSectionReveal<HTMLFormElement>({
     direction: "right",
-    distance: 35,
-    duration: "0.8s",
-    delay: "0.15s",
+    distance: 28,
+    duration: "0.85s",
+    delay: "0.12s",
   });
+  const [formAnimated, setFormAnimated] = useState(false);
+
+  useEffect(() => {
+    if (!formReveal.isInView) return;
+    const t = setTimeout(() => setFormAnimated(true), 950);
+    return () => clearTimeout(t);
+  }, [formReveal.isInView]);
+
+  const updateMessageScrollable = (el: HTMLTextAreaElement) => {
+    setMessageScrollable(el.scrollHeight > el.clientHeight);
+  };
+
+  const handleMessageFocus = (e: FocusEvent<HTMLTextAreaElement>) => {
+    updateMessageScrollable(e.currentTarget);
+  };
+
+  const handleMessageInput = (e: ReactFormEvent<HTMLTextAreaElement>) => {
+    updateMessageScrollable(e.currentTarget);
+  };
+
+  const handleMessageBlur = () => {
+    setMessageScrollable(false);
+  };
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = String(new FormData(e.currentTarget).get("email") || "");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const form = e.currentTarget;
+    const name = String(new FormData(form).get("name") || "").trim();
+    const email = String(new FormData(form).get("email") || "").trim();
+
+    let hasError = false;
+
+    if (!name) {
+      setNameError("Full name is required.");
+      hasError = true;
+    } else {
+      setNameError(null);
+    }
+
+    if (!email) {
+      setEmailError("Email address is required.");
+      hasError = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      hasError = true;
+    } else {
+      setEmailError(null);
+    }
+
+    if (hasError) {
       setStatus("error");
       return;
     }
+
+    setNameError(null);
+    setEmailError(null);
     setStatus("sent");
-    e.currentTarget.reset();
+    setMessageScrollable(false);
+    form.reset();
   };
 
   return (
@@ -45,7 +106,7 @@ export function Contact() {
       itemType="https://schema.org/RealEstateAgent"
       className="pt-20 pb-14 sm:py-24 md:py-32"
     >
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-2 lg:gap-16">
+      <div className="mx-auto grid max-w-7xl items-start gap-12 px-5 md:px-8 min-[900px]:grid-cols-2 min-[900px]:items-start min-[900px]:gap-16">
         {/* Contact Info & Location */}
         <div ref={detailsReveal.ref} style={detailsReveal.style} className="min-w-0">
           <p className="eyebrow max-sm:!text-[0.65rem] max-sm:!tracking-[0.18em] text-primary">
@@ -122,7 +183,7 @@ export function Contact() {
           </address>
 
           {/* Interactive Map Embed */}
-          <div className="mt-8 overflow-hidden border border-border sm:mt-10 rounded-sm">
+          <div className="mt-8 overflow-hidden border border-border sm:mt-10 rounded-lg">
             <iframe
               title="Interactive Google Map to The Ridge Realty Group in Pahrump NV"
               src="https://www.google.com/maps?q=3190+HW-160+Suite+F,+Pahrump,+NV+89048&output=embed"
@@ -136,21 +197,20 @@ export function Contact() {
             href="https://www.google.com/maps/dir/?api=1&destination=3190+HW-160+Suite+F,+Pahrump,+NV+89048"
             target="_blank"
             rel="noopener noreferrer"
-            className="eyebrow max-sm:!text-[0.65rem] max-sm:!tracking-[0.18em] mt-3 inline-flex min-h-11 items-center gap-2 text-primary hover:text-foreground transition-colors"
+            className="eyebrow max-sm:!text-[0.65rem] max-sm:!tracking-[0.18em] mt-3 inline-flex min-h-11 items-center gap-2 text-primary hover:text-foreground transition-colors min-[900px]:mt-4 min-[900px]:min-h-0 min-[900px]:leading-none"
           >
-            Get driving directions{" "}
-            <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+            Get directions <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
           </a>
         </div>
 
         {/* Contact Form */}
         <form
           ref={formReveal.ref}
-          style={formReveal.style}
+          style={formAnimated ? undefined : formReveal.style}
           onSubmit={onSubmit}
           noValidate
           aria-label="Send a direct inquiry message"
-          className="min-w-0 self-start bg-card p-5 shadow-soft sm:p-8 md:p-10 rounded-sm border border-border/40"
+          className="min-w-0 self-start rounded-lg border border-border/40 bg-card p-5 shadow-md sm:p-8 md:p-10 min-[900px]:sticky min-[900px]:top-[120px]"
         >
           <h3 className="text-xl sm:text-3xl font-medium">Send a message</h3>
 
@@ -161,12 +221,33 @@ export function Contact() {
                 name="name"
                 type="text"
                 autoComplete="name"
-                className="field w-full"
-                placeholder="Jane Doe"
+                required
+                aria-required="true"
+                aria-invalid={Boolean(nameError)}
+                aria-describedby={nameError ? nameErrorId : undefined}
+                onChange={() => {
+                  if (nameError) {
+                    setNameError(null);
+                    if (!emailError) setStatus("idle");
+                  }
+                }}
+                className={`field w-full placeholder:text-muted-foreground/65 ${
+                  nameError ? "!border-destructive" : ""
+                }`}
+                placeholder="John Doe"
               />
+              {nameError && (
+                <span
+                  id={nameErrorId}
+                  role="alert"
+                  className="mt-2 block text-sm text-destructive animate-rise"
+                >
+                  {nameError}
+                </span>
+              )}
             </Field>
 
-            <Field label="Email Address" id={emailId} required>
+            <Field label="Email Address" id={emailId}>
               <input
                 id={emailId}
                 name="email"
@@ -174,32 +255,28 @@ export function Contact() {
                 autoComplete="email"
                 required
                 aria-required="true"
-                aria-invalid={status === "error"}
-                aria-describedby={status === "error" ? errorId : undefined}
-                onChange={() => status === "error" && setStatus("idle")}
-                className={`field w-full ${status === "error" ? "border-destructive text-destructive" : ""}`}
-                placeholder="jane@example.com"
+                aria-invalid={Boolean(emailError)}
+                aria-describedby={emailError ? emailErrorId : undefined}
+                onChange={() => {
+                  if (emailError) {
+                    setEmailError(null);
+                    if (!nameError) setStatus("idle");
+                  }
+                }}
+                className={`field w-full placeholder:text-muted-foreground/65 ${
+                  emailError ? "!border-destructive" : ""
+                }`}
+                placeholder="john@example.com"
               />
-              {status === "error" && (
+              {emailError && (
                 <span
-                  id={errorId}
+                  id={emailErrorId}
                   role="alert"
                   className="mt-2 block text-sm text-destructive animate-rise"
                 >
-                  Please enter a valid email address.
+                  {emailError}
                 </span>
               )}
-            </Field>
-
-            <Field label="Phone (Optional)" id={phoneId}>
-              <input
-                id={phoneId}
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                className="field w-full"
-                placeholder="(775) 000-0000"
-              />
             </Field>
 
             <Field label="How Can We Help?" id={messageId}>
@@ -207,7 +284,15 @@ export function Contact() {
                 id={messageId}
                 name="message"
                 rows={4}
-                className="field w-full resize-none"
+                // Lenis ignores wheel/touch here ONLY when focused and overflowing,
+                // otherwise the page scrolls normally even while hovering the textarea.
+                data-lenis-prevent={messageScrollable ? "true" : undefined}
+                onFocus={handleMessageFocus}
+                onInput={handleMessageInput}
+                onBlur={handleMessageBlur}
+                className={`field w-full resize-none placeholder:text-muted-foreground/65 pr-2.5 ${
+                  messageScrollable ? "overscroll-contain" : ""
+                }`}
                 placeholder="Tell us about your timeline, buying or selling goals..."
               />
             </Field>
@@ -215,7 +300,7 @@ export function Contact() {
 
           <button
             type="submit"
-            className="btn btn-primary max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] mt-8 w-full justify-center sm:mt-10 shadow-md hover:scale-[1.01] active:scale-[0.99]"
+            className="btn btn-primary max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] mt-6 w-full justify-center sm:mt-8 shadow-md hover:scale-[1.01] active:scale-[0.99]"
           >
             Send Message
           </button>

@@ -4,8 +4,8 @@ import { FEATURES } from "@/lib/constants";
 export function Approach() {
   const headerReveal = useSectionReveal<HTMLDivElement>({
     direction: "up",
-    distance: 30,
-    duration: "0.7s",
+    distance: 24,
+    duration: "0.8s",
   });
 
   return (
@@ -51,18 +51,18 @@ export function Approach() {
 function FeatureCard({ feature, index }: { feature: (typeof FEATURES)[number]; index: number }) {
   const cardReveal = useSectionReveal<HTMLElement>({
     direction: "up",
-    distance: 40,
-    delay: `${index * 0.14}s`,
-    duration: "0.75s",
+    distance: 28,
+    delay: `${index * 0.12}s`,
+    duration: "0.8s",
   });
 
   return (
     <article
       ref={cardReveal.ref}
       style={cardReveal.style}
-      className="group rounded-sm md:grid md:grid-cols-2 md:items-center md:gap-8 lg:block"
+      className="group md:grid md:grid-cols-2 md:items-center md:gap-8 lg:block rounded-lg border border-border/40"
     >
-      <div className="overflow-hidden rounded-sm">
+      <div className="overflow-hidden rounded-tl-lg rounded-tr-lg md:rounded-tr-none md:rounded-bl-lg lg:rounded-tr-lg lg:rounded-bl-none">
         <img
           src={feature.img}
           alt={feature.alt}
@@ -70,10 +70,10 @@ function FeatureCard({ feature, index }: { feature: (typeof FEATURES)[number]; i
           decoding="async"
           width={600}
           height={450}
-          className="aspect-[4/3] w-full rounded-sm object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-active:scale-105"
         />
       </div>
-      <div className="mt-6 md:mt-0 lg:mt-6">
+      <div className="p-4">
         <div className="flex items-baseline gap-4">
           <span className="font-display text-lg text-accent sm:text-xl" aria-hidden="true">
             0{index + 1}

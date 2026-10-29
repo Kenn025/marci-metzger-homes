@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 
 /**
  * Animated number counter hook with cubic easing.
+ * Works seamlessly across all screen devices and respects prefers-reduced-motion.
  */
-export function useCountUp(target: number, duration = 1800, enabled = false, decimals = 0) {
-  const [current, setCurrent] = useState(0);
+export function useCountUp(target: number, duration = 1600, enabled = true, decimals = 0) {
+  const [current, setCurrent] = useState(target);
 
   useEffect(() => {
     if (!enabled) return;
@@ -14,6 +15,7 @@ export function useCountUp(target: number, duration = 1800, enabled = false, dec
       return;
     }
 
+    setCurrent(0);
     let rafId: number;
     const start = performance.now();
 

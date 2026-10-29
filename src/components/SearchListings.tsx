@@ -1,11 +1,94 @@
-import { useState, useId, type FormEvent } from "react";
+import { useState, useId, type FormEvent, type KeyboardEvent, type ChangeEvent } from "react";
 import { Search } from "lucide-react";
 import { useSectionReveal } from "@/hooks";
 import { Field } from "./Field";
 import { dreamImg, PHONE, TEL } from "@/lib/constants";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const LOCATIONS = [
+  { value: "any", label: "Any" },
+  { value: "pahrump", label: "Pahrump" },
+  { value: "alamo", label: "Alamo" },
+  { value: "alton", label: "Alton" },
+  { value: "amargosa-valley", label: "Amargosa Valley" },
+  { value: "beatty", label: "Beatty" },
+  { value: "blue-diamond", label: "Blue Diamond" },
+  { value: "boulder-city", label: "Boulder City" },
+  { value: "cal-nev-ari", label: "Cal Nev Ari" },
+  { value: "caliente", label: "Caliente" },
+  { value: "cold-creek", label: "Cold Creek" },
+  { value: "crystal", label: "Crystal" },
+  { value: "dyer", label: "Dyer" },
+  { value: "elko", label: "Elko" },
+  { value: "ely", label: "Ely" },
+  { value: "goldfield", label: "Goldfield" },
+  { value: "goodsprings", label: "Goodsprings" },
+  { value: "henderson", label: "Henderson" },
+  { value: "indian-springs", label: "Indian Springs" },
+  { value: "las-vegas", label: "Las Vegas" },
+  { value: "laughlin", label: "Laughlin" },
+  { value: "mesquite", label: "Mesquite" },
+  { value: "mount-charleston", label: "Mount Charleston" },
+  { value: "north-las-vegas", label: "North Las Vegas" },
+] as const;
+
+const PROPERTY_TYPES = [
+  { value: "any", label: "Any" },
+  { value: "residential", label: "Residential" },
+  { value: "land", label: "Land / Acreage" },
+  { value: "high-rise", label: "High Rise" },
+  { value: "commercial", label: "Commercial" },
+] as const;
+
+const BEDROOM_OPTIONS = [
+  { value: "any", label: "Any number" },
+  { value: "studio", label: "Studio" },
+  { value: "1", label: "1+" },
+  { value: "2", label: "2+" },
+  { value: "3", label: "3+" },
+  { value: "4", label: "4+" },
+  { value: "5", label: "5+" },
+  { value: "6", label: "6+" },
+] as const;
+
+const BATHROOM_OPTIONS = [
+  { value: "any", label: "Any number" },
+  { value: "1", label: "1+" },
+  { value: "2", label: "2+" },
+  { value: "3", label: "3+" },
+  { value: "4", label: "4+" },
+  { value: "5", label: "5+" },
+  { value: "6", label: "6+" },
+] as const;
+
+const SORT_OPTIONS = [
+  { value: "new", label: "Newest" },
+  { value: "old", label: "Oldest" },
+  { value: "price-asc", label: "Least Expensive to Most" },
+  { value: "price-desc", label: "Most Expensive to Least" },
+  { value: "bedrooms-desc", label: "Bedrooms (High to Low)" },
+  { value: "bathrooms-desc", label: "Bathrooms (High to Low)" },
+] as const;
+
+const selectTriggerClassName =
+  "field flex h-auto w-full items-center justify-between rounded-none border-x-0 border-t-0 border-b border-input bg-transparent px-0 py-2.5 text-[0.95rem] font-normal shadow-none ring-0 ring-offset-0 transition-colors cursor-pointer focus:border-primary focus:outline-none focus:ring-0 data-[state=open]:border-primary [&>span]:text-left [&>span]:line-clamp-1 [&>svg]:text-muted-foreground [&>svg]:transition-transform [&>svg]:duration-200 data-[state=open]:[&>svg]:rotate-180";
 
 export function SearchListings() {
-  const [sent, setSent] = useState(false);
+  const [feedback, setFeedback] = useState<"idle" | "empty" | "sent">("idle");
+  const [location, setLocation] = useState("any");
+  const [propertyType, setPropertyType] = useState("any");
+  const [bedrooms, setBedrooms] = useState("any");
+  const [bathrooms, setBathrooms] = useState("any");
+  const [sortBy, setSortBy] = useState("new");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+
   const locationId = useId();
   const typeId = useId();
   const bedsId = useId();
@@ -14,24 +97,76 @@ export function SearchListings() {
   const maxPriceId = useId();
   const sortId = useId();
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSent(true);
+  const handlePriceKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    // Allow navigation, control keys, and clipboard shortcuts
+    if (
+      e.key === "Backspace" ||
+      e.key === "Delete" ||
+      e.key === "Tab" ||
+      e.key === "Enter" ||
+      e.key === "ArrowLeft" ||
+      e.key === "ArrowRight" ||
+      e.key === "ArrowUp" ||
+      e.key === "ArrowDown" ||
+      e.key === "Home" ||
+      e.key === "End" ||
+      e.ctrlKey ||
+      e.metaKey
+    ) {
+      return;
+    }
+    // Block any non-digit characters
+    if (!/^[0-9]$/.test(e.key)) {
+      e.preventDefault();
+    }
   };
 
-  const sel = "field w-full appearance-none cursor-pointer bg-transparent";
+  const handleMinPriceChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (feedback !== "idle") setFeedback("idle");
+    setMinPrice(e.target.value.replace(/\D/g, ""));
+  };
+
+  const handleMaxPriceChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (feedback !== "idle") setFeedback("idle");
+    setMaxPrice(e.target.value.replace(/\D/g, ""));
+  };
+
+  const onFilterChange = () => {
+    if (feedback !== "idle") setFeedback("idle");
+  };
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const min = minPrice.trim();
+    const max = maxPrice.trim();
+
+    const hasCustomCriteria =
+      location !== "any" ||
+      propertyType !== "any" ||
+      bedrooms !== "any" ||
+      bathrooms !== "any" ||
+      min !== "" ||
+      max !== "";
+
+    if (!hasCustomCriteria) {
+      setFeedback("empty");
+      return;
+    }
+
+    setFeedback("sent");
+  };
 
   const copyReveal = useSectionReveal<HTMLDivElement>({
     direction: "left",
-    distance: 35,
-    duration: "0.8s",
+    distance: 28,
+    duration: "0.85s",
   });
 
   const formReveal = useSectionReveal<HTMLFormElement>({
     direction: "right",
-    distance: 35,
-    duration: "0.8s",
-    delay: "0.15s",
+    distance: 28,
+    duration: "0.85s",
+    delay: "0.12s",
   });
 
   return (
@@ -77,69 +212,95 @@ export function SearchListings() {
           style={formReveal.style}
           onSubmit={onSubmit}
           aria-label="Filter property listings"
-          className="bg-card p-6 text-card-foreground shadow-soft sm:p-8 md:p-10 lg:col-span-7 rounded-sm"
+          className="bg-card p-6 text-card-foreground shadow-soft sm:p-8 md:p-10 lg:col-span-7 rounded-lg"
         >
           <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 md:gap-7">
             <Field label="Location" id={locationId}>
-              <select id={locationId} name="location" className={sel} defaultValue="any">
-                <option value="any">Any</option>
-                <option value="pahrump">Pahrump</option>
-                <option value="alamo">Alamo</option>
-                <option value="alton">Alton</option>
-                <option value="amargosa-valley">Amargosa Valley</option>
-                <option value="beatty">Beatty</option>
-                <option value="blue-diamond">Blue Diamond</option>
-                <option value="boulder-city">Boulder City</option>
-                <option value="cal-nev-ari">Cal Nev Ari</option>
-                <option value="caliente">Caliente</option>
-                <option value="cold-creek">Cold Creek</option>
-                <option value="crystal">Crystal</option>
-                <option value="dyer">Dyer</option>
-                <option value="elko">Elko</option>
-                <option value="ely">Ely</option>
-                <option value="goldfield">Goldfield</option>
-                <option value="goodsprings">Goodsprings</option>
-                <option value="henderson">Henderson</option>
-                <option value="indian-springs">Indian Springs</option>
-                <option value="las-vegas">Las Vegas</option>
-                <option value="laughlin">Laughlin</option>
-                <option value="mesquite">Mesquite</option>
-                <option value="mount-charleston">Mount Charleston</option>
-                <option value="north-las-vegas">North Las Vegas</option>
-              </select>
+              <Select
+                name="location"
+                value={location}
+                onValueChange={(val) => {
+                  setLocation(val);
+                  onFilterChange();
+                }}
+              >
+                <SelectTrigger id={locationId} className={selectTriggerClassName}>
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent className="max-h-72 border-border/60 bg-card text-card-foreground shadow-soft">
+                  {LOCATIONS.map((loc) => (
+                    <SelectItem key={loc.value} value={loc.value}>
+                      {loc.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
 
             <Field label="Property Type" id={typeId}>
-              <select id={typeId} name="propertyType" className={sel} defaultValue="any">
-                <option value="any">Any</option>
-                <option value="residential">Residential</option>
-                <option value="land">Land / Acreage</option>
-                <option value="high-rise">High Rise</option>
-                <option value="commercial">Commercial</option>
-              </select>
+              <Select
+                name="propertyType"
+                value={propertyType}
+                onValueChange={(val) => {
+                  setPropertyType(val);
+                  onFilterChange();
+                }}
+              >
+                <SelectTrigger id={typeId} className={selectTriggerClassName}>
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent className="border-border/60 bg-card text-card-foreground shadow-soft">
+                  {PROPERTY_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
 
             <Field label="Bedrooms" id={bedsId}>
-              <select id={bedsId} name="bedrooms" className={sel} defaultValue="any">
-                <option value="any">Any number</option>
-                <option value="studio">Studio</option>
-                {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <option key={n} value={String(n)}>
-                    {n}+
-                  </option>
-                ))}
-              </select>
+              <Select
+                name="bedrooms"
+                value={bedrooms}
+                onValueChange={(val) => {
+                  setBedrooms(val);
+                  onFilterChange();
+                }}
+              >
+                <SelectTrigger id={bedsId} className={selectTriggerClassName}>
+                  <SelectValue placeholder="Any number" />
+                </SelectTrigger>
+                <SelectContent className="border-border/60 bg-card text-card-foreground shadow-soft">
+                  {BEDROOM_OPTIONS.map((bed) => (
+                    <SelectItem key={bed.value} value={bed.value}>
+                      {bed.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
 
             <Field label="Bathrooms" id={bathsId}>
-              <select id={bathsId} name="bathrooms" className={sel} defaultValue="any">
-                <option value="any">Any number</option>
-                {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <option key={n} value={String(n)}>
-                    {n}+
-                  </option>
-                ))}
-              </select>
+              <Select
+                name="bathrooms"
+                value={bathrooms}
+                onValueChange={(val) => {
+                  setBathrooms(val);
+                  onFilterChange();
+                }}
+              >
+                <SelectTrigger id={bathsId} className={selectTriggerClassName}>
+                  <SelectValue placeholder="Any number" />
+                </SelectTrigger>
+                <SelectContent className="border-border/60 bg-card text-card-foreground shadow-soft">
+                  {BATHROOM_OPTIONS.map((bath) => (
+                    <SelectItem key={bath.value} value={bath.value}>
+                      {bath.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
 
             <Field label="Min Price ($)" id={minPriceId}>
@@ -147,9 +308,13 @@ export function SearchListings() {
                 id={minPriceId}
                 name="minPrice"
                 type="text"
-                className="field w-full"
+                className="field w-full placeholder:text-muted-foreground/65"
                 inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="No min"
+                value={minPrice}
+                onKeyDown={handlePriceKeyDown}
+                onChange={handleMinPriceChange}
               />
             </Field>
 
@@ -158,21 +323,36 @@ export function SearchListings() {
                 id={maxPriceId}
                 name="maxPrice"
                 type="text"
-                className="field w-full"
+                className="field w-full placeholder:text-muted-foreground/65"
                 inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="No max"
+                value={maxPrice}
+                onKeyDown={handlePriceKeyDown}
+                onChange={handleMaxPriceChange}
               />
             </Field>
 
             <Field label="Sort By" id={sortId}>
-              <select id={sortId} name="sortBy" className={sel} defaultValue="new">
-                <option value="new">Newest</option>
-                <option value="old">Oldest</option>
-                <option value="price-asc">Least Expensive to Most</option>
-                <option value="price-desc">Most Expensive to Least</option>
-                <option value="bedrooms-desc">Bedrooms (High to Low)</option>
-                <option value="bathrooms-desc">Bathrooms (High to Low)</option>
-              </select>
+              <Select
+                name="sortBy"
+                value={sortBy}
+                onValueChange={(val) => {
+                  setSortBy(val);
+                  onFilterChange();
+                }}
+              >
+                <SelectTrigger id={sortId} className={selectTriggerClassName}>
+                  <SelectValue placeholder="Newest" />
+                </SelectTrigger>
+                <SelectContent className="border-border/60 bg-card text-card-foreground shadow-soft">
+                  {SORT_OPTIONS.map((sort) => (
+                    <SelectItem key={sort.value} value={sort.value}>
+                      {sort.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
 
             <div className="flex items-end">
@@ -185,7 +365,18 @@ export function SearchListings() {
             </div>
           </div>
 
-          {sent && (
+          {feedback === "empty" && (
+            <p
+              role="alert"
+              aria-live="polite"
+              className="mt-6 border-l-2 border-destructive pl-4 text-sm text-destructive animate-rise font-medium"
+            >
+              Please select at least one search filter (location, property type, bedrooms, or price
+              range) to find matching listings.
+            </p>
+          )}
+
+          {feedback === "sent" && (
             <p
               role="status"
               aria-live="polite"

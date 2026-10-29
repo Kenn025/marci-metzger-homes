@@ -26,7 +26,7 @@ export function Affiliations() {
               decoding="async"
               width={160}
               height={80}
-              className="mx-auto h-12 w-auto max-w-full object-contain mix-blend-multiply grayscale opacity-75 transition-all duration-300 hover:grayscale-0 hover:opacity-100 sm:h-20 md:h-24"
+              className="mx-auto h-12 w-auto max-w-full object-contain grayscale opacity-80 transition-all duration-300 hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 sm:h-20 md:h-24 cursor-pointer"
             />
           </div>
         ))}
