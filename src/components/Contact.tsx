@@ -300,7 +300,7 @@ export function Contact() {
 
           <button
             type="submit"
-            className="btn btn-primary max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] mt-6 w-full justify-center sm:mt-8 shadow-md hover:scale-[1.01] active:scale-[0.99]"
+            className="btn btn-primary max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] mt-6 w-full justify-center sm:mt-8 shadow-md"
           >
             Send Message
           </button>

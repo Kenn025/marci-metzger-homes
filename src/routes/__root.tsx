@@ -1,8 +1,7 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
-  createRootRouteWithContext,
+  createRootRoute,
   useRouter,
   HeadContent,
   Scripts,
@@ -12,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import favicon from "../assets/site/the-ridge-realty-group.webp";
+import cinzelFont from "../assets/fonts/cinzel-latin.woff2";
+import sourceSansProFont from "../assets/fonts/source-sans-pro-regular-latin.woff2";
 
 function NotFoundComponent() {
   return (
@@ -67,14 +68,17 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#c25e2e" },
-      { title: "Marci Metzger Homes | Pahrump Realtor" },
+      { title: "Marci Metzger Homes - Pahrump Realtor" },
       { name: "description", content: "Marci Metzger – The Ridge Realty Group, Pahrump, Nevada." },
+      {
+        name: "google-site-verification",
+        content: "I7iIIA3CVwR6JbmDFG60JVjA0qVKBwe05TBNihtCMKU",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -82,13 +86,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/webp", href: favicon },
       { rel: "apple-touch-icon", href: favicon },
       { rel: "canonical", href: "https://marci-metzger-pahrump.vercel.app/" },
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap",
+        rel: "preload",
+        as: "font",
+        type: "font/woff2",
+        href: cinzelFont,
+        crossOrigin: "anonymous",
       },
+      {
+        rel: "preload",
+        as: "font",
+        type: "font/woff2",
+        href: sourceSansProFont,
+        crossOrigin: "anonymous",
+      },
+      { rel: "stylesheet", href: appCss },
     ],
   }),
   shellComponent: RootShell,
@@ -112,10 +124,5 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
-  );
+  return <Outlet />;
 }

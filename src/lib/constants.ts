@@ -1,4 +1,7 @@
 import heroImg from "@/assets/site/hero.webp";
+import heroSmallImg from "@/assets/site/hero-sm.webp";
+import heroMediumImg from "@/assets/site/hero-md.webp";
+import heroLargeImg from "@/assets/site/hero-lg.webp";
 import logoImg from "@/assets/site/logo-main.webp";
 import marciImg from "@/assets/site/marci-portrait.webp";
 import kitchenImg from "@/assets/site/kitchen.webp";
@@ -19,6 +22,27 @@ import g4 from "@/assets/site/gallery-beacon-exterior.webp";
 import g5 from "@/assets/site/gallery-beacon-interior.webp";
 import g6 from "@/assets/site/gallery-ailanto-exterior.webp";
 import g7 from "@/assets/site/gallery-ailanto-backyard.webp";
+import g1Small from "@/assets/site/sunroom-sm.webp";
+import g1Medium from "@/assets/site/sunroom-md.webp";
+import g1Thumb from "@/assets/site/sunroom-thumb.webp";
+import g2Small from "@/assets/site/roseworthy-sm.webp";
+import g2Medium from "@/assets/site/roseworthy-md.webp";
+import g2Thumb from "@/assets/site/roseworthy-thumb.webp";
+import g3Small from "@/assets/site/beacon-aerial-sm.webp";
+import g3Medium from "@/assets/site/beacon-aerial-md.webp";
+import g3Thumb from "@/assets/site/beacon-aerial-thumb.webp";
+import g4Small from "@/assets/site/beacon-exterior-sm.webp";
+import g4Medium from "@/assets/site/beacon-exterior-md.webp";
+import g4Thumb from "@/assets/site/beacon-exterior-thumb.webp";
+import g5Small from "@/assets/site/beacon-interior-sm.webp";
+import g5Medium from "@/assets/site/beacon-interior-md.webp";
+import g5Thumb from "@/assets/site/beacon-interior-thumb.webp";
+import g6Small from "@/assets/site/ailanto-exterior-sm.webp";
+import g6Medium from "@/assets/site/ailanto-exterior-md.webp";
+import g6Thumb from "@/assets/site/ailanto-exterior-thumb.webp";
+import g7Small from "@/assets/site/backyard-sm.webp";
+import g7Medium from "@/assets/site/backyard-md.webp";
+import g7Thumb from "@/assets/site/backyard-thumb.webp";
 import { faFacebookF, faInstagram, faLinkedinIn, faYelp } from "@fortawesome/free-brands-svg-icons";
 
 /* ---- Contact ---- */
@@ -38,11 +62,33 @@ export const NAV = [
 export const NAV_IDS = ["about", "approach", "search", "gallery", "services", "contact"] as const;
 
 /* ---- Images ---- */
-export { heroImg, logoImg, marciImg, kitchenImg, poolImg, keysImg, dreamImg };
+export {
+  heroImg,
+  heroSmallImg,
+  heroMediumImg,
+  heroLargeImg,
+  logoImg,
+  marciImg,
+  kitchenImg,
+  poolImg,
+  keysImg,
+  dreamImg,
+};
 export { livingImg, modernImg, handshakeImg };
 export { ridgeLogo, ehoLogo, realtorLogo, chamberLogo };
 
 export const GALLERY = [g1, g2, g3, g4, g5, g6, g7];
+export const GALLERY_SMALL = [g1Small, g2Small, g3Small, g4Small, g5Small, g6Small, g7Small];
+export const GALLERY_MEDIUM = [
+  g1Medium,
+  g2Medium,
+  g3Medium,
+  g4Medium,
+  g5Medium,
+  g6Medium,
+  g7Medium,
+];
+export const GALLERY_THUMB = [g1Thumb, g2Thumb, g3Thumb, g4Thumb, g5Thumb, g6Thumb, g7Thumb];
 
 /* ---- Hero stats ---- */
 export const STATS: [string, string][] = [

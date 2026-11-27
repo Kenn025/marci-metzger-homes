@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, type PointerEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSectionReveal } from "@/hooks";
-import { GALLERY } from "@/lib/constants";
+import { GALLERY, GALLERY_MEDIUM, GALLERY_SMALL, GALLERY_THUMB } from "@/lib/constants";
 
 export function Gallery() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -143,12 +143,14 @@ export function Gallery() {
             <img
               key={src}
               src={src}
+              srcSet={`${GALLERY_SMALL[k]} 480w, ${GALLERY_MEDIUM[k]} 768w, ${src} 1024w`}
+              sizes="(max-width: 640px) calc(100vw - 40px), (max-width: 1280px) calc(100vw - 64px), 1280px"
               alt={`Pahrump neighborhood and luxury home visual showcase ${k + 1}`}
               loading={k === 0 ? "eager" : "lazy"}
               decoding={k === 0 ? "sync" : "async"}
               draggable={false}
-              width={1280}
-              height={720}
+              width={1024}
+              height={683}
               className={`aspect-[4/3] w-full select-none rounded-sm object-cover transition-opacity duration-700 pointer-events-none sm:aspect-[16/9] ${
                 k === currentIndex ? "relative opacity-100" : "absolute inset-0 opacity-0"
               }`}
@@ -161,7 +163,7 @@ export function Gallery() {
               type="button"
               onClick={() => go(-1)}
               aria-label="Previous photo"
-              className="btn btn-light !p-3 max-sm:!p-2.5 shadow-md hover:scale-105 active:scale-95"
+              className="btn btn-light !p-3 max-sm:!p-2.5 shadow-md transition-[color,background-color,border-color,transform] duration-300 active:scale-95"
             >
               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
             </button>
@@ -169,7 +171,7 @@ export function Gallery() {
               type="button"
               onClick={() => go(1)}
               aria-label="Next photo"
-              className="btn btn-light !p-3 max-sm:!p-2.5 shadow-md hover:scale-105 active:scale-95"
+              className="btn btn-light !p-3 max-sm:!p-2.5 shadow-md transition-[color,background-color,border-color,transform] duration-300 active:scale-95"
             >
               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
             </button>
@@ -196,13 +198,13 @@ export function Gallery() {
               }`}
             >
               <img
-                src={src}
+                src={GALLERY_THUMB[k]}
                 alt=""
                 loading="lazy"
                 decoding="async"
                 draggable={false}
-                width={120}
-                height={120}
+                width={160}
+                height={107}
                 className="aspect-square w-full select-none rounded-lg object-cover border border-border/40"
               />
             </button>

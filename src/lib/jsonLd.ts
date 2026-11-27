@@ -104,7 +104,7 @@ export function getJsonLd() {
         "@type": "WebPage",
         "@id": `${SITE_URL}/#webpage`,
         url: SITE_URL,
-        name: "Marci Metzger Homes | Pahrump, NV Realtor – The Ridge Realty Group",
+        name: "Marci Metzger Homes - Pahrump Realtor",
         isPartOf: {
           "@id": `${SITE_URL}/#website`,
         },

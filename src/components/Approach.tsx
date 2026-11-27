@@ -1,7 +1,13 @@
 import { useSectionReveal } from "@/hooks";
 import { FEATURES } from "@/lib/constants";
 
-export function Approach() {
+export function Approach({
+  activeInteraction,
+  onActivate,
+}: {
+  activeInteraction: string | null;
+  onActivate: (id: string) => void;
+}) {
   const headerReveal = useSectionReveal<HTMLDivElement>({
     direction: "up",
     distance: 24,
@@ -31,7 +37,7 @@ export function Approach() {
           </div>
           <a
             href="#contact"
-            className="btn btn-outline-light max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] self-start md:self-auto hover:scale-[1.02] active:scale-[0.98]"
+            className="btn btn-outline-light max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] self-start md:self-auto"
           >
             Talk to Marci
           </a>
@@ -40,7 +46,13 @@ export function Approach() {
         {/* 3 Pillars / Features Grid with Staggered Motion Entrance */}
         <div className="mt-12 grid gap-12 sm:mt-16 lg:grid-cols-3 lg:gap-8">
           {FEATURES.map((feature, i) => (
-            <FeatureCard key={feature.title} feature={feature} index={i} />
+            <FeatureCard
+              key={feature.title}
+              feature={feature}
+              index={i}
+              isActive={activeInteraction === `approach-${i}`}
+              onActivate={() => onActivate(`approach-${i}`)}
+            />
           ))}
         </div>
       </div>
@@ -48,7 +60,17 @@ export function Approach() {
   );
 }
 
-function FeatureCard({ feature, index }: { feature: (typeof FEATURES)[number]; index: number }) {
+function FeatureCard({
+  feature,
+  index,
+  isActive,
+  onActivate,
+}: {
+  feature: (typeof FEATURES)[number];
+  index: number;
+  isActive: boolean;
+  onActivate: () => void;
+}) {
   const cardReveal = useSectionReveal<HTMLElement>({
     direction: "up",
     distance: 28,
@@ -60,7 +82,18 @@ function FeatureCard({ feature, index }: { feature: (typeof FEATURES)[number]; i
     <article
       ref={cardReveal.ref}
       style={cardReveal.style}
-      className="group md:grid md:grid-cols-2 md:items-center md:gap-8 lg:block rounded-lg border border-border/40"
+      role="button"
+      tabIndex={0}
+      aria-pressed={isActive}
+      onClick={onActivate}
+      data-active-interaction
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onActivate();
+        }
+      }}
+      className="group rounded-lg border border-border/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:grid md:grid-cols-2 md:items-center md:gap-8 lg:block"
     >
       <div className="overflow-hidden rounded-tl-lg rounded-tr-lg md:rounded-tr-none md:rounded-bl-lg lg:rounded-tr-lg lg:rounded-bl-none">
         <img
@@ -70,7 +103,7 @@ function FeatureCard({ feature, index }: { feature: (typeof FEATURES)[number]; i
           decoding="async"
           width={600}
           height={450}
-          className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-active:scale-105"
+          className={`aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out [@media(hover:hover)]:group-hover:scale-105 ${isActive ? "[@media(hover:none)]:scale-105" : ""}`}
         />
       </div>
       <div className="p-4">

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useSmoothScroll } from "@/hooks";
 import {
   Header,
@@ -22,7 +23,7 @@ const ogImageUrl = `${SITE_URL}${heroImg}`;
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Marci Metzger Homes | Pahrump, NV Realtor – The Ridge Realty Group" },
+      { title: "Marci Metzger Homes - Pahrump Realtor" },
       {
         name: "description",
         content:
@@ -47,7 +48,7 @@ export const Route = createFileRoute("/")({
       { property: "og:site_name", content: "Marci Metzger Homes" },
       {
         property: "og:title",
-        content: "Marci Metzger Homes | Pahrump, NV Realtor – The Ridge Realty Group",
+        content: "Marci Metzger Homes - Pahrump Realtor",
       },
       {
         property: "og:description",
@@ -70,7 +71,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
-        content: "Marci Metzger Homes | Pahrump, NV Realtor – The Ridge Realty Group",
+        content: "Marci Metzger Homes - Pahrump Realtor",
       },
       {
         name: "twitter:description",
@@ -93,8 +94,21 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
+  const [activeInteraction, setActiveInteraction] = useState<string | null>(null);
+
   // Initialize smooth scrolling with Lenis & handle #hash clicks
   useSmoothScroll();
+
+  useEffect(() => {
+    const clearActiveInteraction = (event: PointerEvent) => {
+      if (event.target instanceof Element && !event.target.closest("[data-active-interaction]")) {
+        setActiveInteraction(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", clearActiveInteraction);
+    return () => document.removeEventListener("pointerdown", clearActiveInteraction);
+  }, []);
 
   return (
     <div className="overflow-x-clip bg-background text-foreground selection:bg-primary/20 selection:text-primary">
@@ -117,11 +131,11 @@ function HomePage() {
       <main id="main-content" tabIndex={-1} className="outline-none">
         <Hero />
         <About />
-        <Approach />
+        <Approach activeInteraction={activeInteraction} onActivate={setActiveInteraction} />
         <SearchListings />
         <Gallery />
-        <Services />
-        <Affiliations />
+        <Services activeInteraction={activeInteraction} onActivate={setActiveInteraction} />
+        <Affiliations activeInteraction={activeInteraction} onActivate={setActiveInteraction} />
         <Contact />
       </main>
 

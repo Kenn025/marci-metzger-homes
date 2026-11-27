@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Phone, Menu, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useActiveSection, useHeaderScroll } from "@/hooks";
 import { NAV, NAV_IDS, PHONE, TEL, logoImg } from "@/lib/constants";
 
@@ -52,10 +53,10 @@ export function Header() {
             solid ? "py-3" : "py-3 sm:py-6"
           }`}
         >
-          <a
-            href="/"
+          <Link
+            to="/"
             aria-label="Marci Metzger Homes – home"
-            className="shrink-0 transition-opacity hover:opacity-90"
+            className="shrink-0 transition-[opacity,transform] duration-300 hover:opacity-90 active:scale-95"
           >
             <img
               src={logoImg}
@@ -65,7 +66,7 @@ export function Header() {
               fetchPriority="high"
               className={`h-7 w-auto transition-all sm:h-10 md:h-12 ${solid ? "" : "invert"}`}
             />
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav

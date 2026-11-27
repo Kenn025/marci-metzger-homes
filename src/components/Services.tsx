@@ -1,7 +1,13 @@
 import { useSectionReveal } from "@/hooks";
 import { SERVICES } from "@/lib/constants";
 
-export function Services() {
+export function Services({
+  activeInteraction,
+  onActivate,
+}: {
+  activeInteraction: string | null;
+  onActivate: (id: string) => void;
+}) {
   const headerReveal = useSectionReveal<HTMLDivElement>({
     direction: "up",
     distance: 24,
@@ -30,7 +36,13 @@ export function Services() {
         {/* 3 Services Cards Grid with Staggered Motion */}
         <div className="mt-12 grid gap-8 sm:mt-16 lg:grid-cols-3">
           {SERVICES.map((service, index) => (
-            <ServiceCard key={service.title} service={service} index={index} />
+            <ServiceCard
+              key={service.title}
+              service={service}
+              index={index}
+              isActive={activeInteraction === `service-${index}`}
+              onActivate={() => onActivate(`service-${index}`)}
+            />
           ))}
         </div>
       </div>
@@ -38,7 +50,17 @@ export function Services() {
   );
 }
 
-function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; index: number }) {
+function ServiceCard({
+  service,
+  index,
+  isActive,
+  onActivate,
+}: {
+  service: (typeof SERVICES)[number];
+  index: number;
+  isActive: boolean;
+  onActivate: () => void;
+}) {
   const cardReveal = useSectionReveal<HTMLElement>({
     direction: "up",
     distance: 28,
@@ -52,7 +74,18 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
       style={cardReveal.style}
       itemScope
       itemType="https://schema.org/Service"
-      className="group bg-card shadow-md md:grid md:grid-cols-2 lg:block rounded-lg overflow-hidden transition-all duration-300 hover:shadow-soft"
+      role="button"
+      tabIndex={0}
+      aria-pressed={isActive}
+      onClick={onActivate}
+      data-active-interaction
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onActivate();
+        }
+      }}
+      className={`group overflow-hidden rounded-lg bg-card shadow-md transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:grid md:grid-cols-2 lg:block [@media(hover:hover)]:hover:shadow-soft ${isActive ? "[@media(hover:none)]:shadow-soft" : ""}`}
     >
       <div className="overflow-hidden rounded-sm">
         <img
@@ -63,7 +96,7 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
           decoding="async"
           width={600}
           height={450}
-          className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-active:scale-105 md:aspect-auto md:h-full md:min-h-64 lg:aspect-[4/3] lg:h-auto lg:min-h-0"
+          className={`aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out [@media(hover:hover)]:group-hover:scale-105 md:aspect-auto md:h-full md:min-h-64 lg:aspect-[4/3] lg:h-auto lg:min-h-0 ${isActive ? "[@media(hover:none)]:scale-105" : ""}`}
         />
       </div>
       <div className="p-6 sm:p-8 md:self-center">

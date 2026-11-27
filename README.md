@@ -11,6 +11,7 @@ All imagery is compressed to WebP in `src/assets/site/` and imported directly, w
 - **Framework:** TanStack Start v1 (`@tanstack/react-start`, `@tanstack/react-router`)
 - **UI Library:** React 19 + shadcn/ui primitives (Radix UI)
 - **Styling:** Tailwind CSS v4 with CSS custom properties (OKLCH design tokens)
+- **Fonts:** Self-hosted WOFF2 files (Cinzel and Source Sans Pro)
 - **Icons:** Lucide React & Font Awesome (social icons)
 - **Smooth Scrolling:** Lenis with custom exponential decay
 - **Motion & Animations:** Custom GPU-accelerated IntersectionObserver reveal hook (`useSectionReveal`) + animated counter hook (`useCountUp`)
@@ -61,8 +62,8 @@ The project uses an earthy, desert-inspired luxury palette defined as CSS tokens
 - **Background (`--background`):** Warm off-white (`oklch(0.975 0.008 80)`)
 - **Destructive (`--destructive`):** Form alert and error red (`oklch(0.577 0.245 27.325)`)
 - **Typography:**
-  - **Headings:** _Cinzel_ (`--font-display`, serif)
-  - **Body Text:** _Source Sans Pro_ (`--font-sans`, sans-serif)
+  - **Headings:** _Cinzel_ (`--font-display`, serif; self-hosted from `src/assets/fonts/`)
+  - **Body Text:** _Source Sans Pro_ (`--font-sans`, sans-serif; self-hosted from `src/assets/fonts/`)
 
 ---
 

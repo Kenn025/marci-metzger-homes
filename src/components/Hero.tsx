@@ -1,6 +1,6 @@
 import { Phone, ArrowRight } from "lucide-react";
 import { useSectionReveal, useCountUp } from "@/hooks";
-import { heroImg, STATS, TEL } from "@/lib/constants";
+import { heroImg, heroSmallImg, heroMediumImg, heroLargeImg, STATS, TEL } from "@/lib/constants";
 
 function AnimatedStat({ value }: { value: string }) {
   const match = value.match(/^([^0-9.]*)([0-9.]+)(.*)$/);
@@ -45,6 +45,8 @@ export function Hero() {
       {/* Background Image with optimized loading for LCP */}
       <img
         src={heroImg}
+        srcSet={`${heroSmallImg} 640w, ${heroMediumImg} 960w, ${heroLargeImg} 1280w, ${heroImg} 1600w`}
+        sizes="100vw"
         alt="Scenic golf course pond with fountains and Spring Mountain views in Pahrump, Nevada"
         fetchPriority="high"
         loading="eager"
@@ -77,13 +79,13 @@ export function Hero() {
         <div className="animate-rise mt-8 flex flex-col gap-3 [animation-delay:360ms] min-[480px]:flex-row min-[480px]:flex-wrap sm:mt-10">
           <a
             href={TEL}
-            className="btn btn-light max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] w-full justify-center min-[480px]:w-auto shadow-md hover:scale-[1.02] active:scale-[0.98]"
+            className="btn btn-light max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] w-full justify-center min-[480px]:w-auto shadow-md"
           >
             <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" /> Call Now
           </a>
           <a
             href="#search"
-            className="btn btn-outline-light max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] w-full justify-center min-[480px]:w-auto hover:scale-[1.02] active:scale-[0.98]"
+            className="btn btn-outline-light max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] w-full justify-center min-[480px]:w-auto"
           >
             Search Listings <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
           </a>

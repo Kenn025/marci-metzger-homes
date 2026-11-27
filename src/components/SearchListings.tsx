@@ -358,7 +358,7 @@ export function SearchListings() {
             <div className="flex items-end">
               <button
                 type="submit"
-                className="btn btn-primary max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] w-full justify-center shadow-md hover:scale-[1.01] active:scale-[0.99]"
+                className="btn btn-primary max-sm:!px-5 max-sm:!py-3 max-sm:!text-[0.7rem] max-sm:!tracking-[0.14em] w-full justify-center shadow-md"
               >
                 <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" /> Search Now
               </button>

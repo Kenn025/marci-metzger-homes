@@ -1,6 +1,24 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { Link } from "@tanstack/react-router";
 import { useSectionReveal } from "@/hooks";
 import { NAV, SOCIALS, logoImg } from "@/lib/constants";
+
+function SocialIcon({ icon }: { icon: IconDefinition }) {
+  const [width, height, , , pathData] = icon.icon;
+  const paths = Array.isArray(pathData) ? pathData : [pathData];
+
+  return (
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+      aria-hidden="true"
+    >
+      {paths.map((path, index) => (
+        <path key={index} d={path} fill="currentColor" />
+      ))}
+    </svg>
+  );
+}
 
 export function Footer() {
   const footerReveal = useSectionReveal<HTMLElement>({
@@ -18,10 +36,10 @@ export function Footer() {
     >
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="flex flex-col items-center text-center">
-          <a
-            href="/"
+          <Link
+            to="/"
             aria-label="Marci Metzger Homes – home"
-            className="shrink-0 transition-opacity hover:opacity-90"
+            className="shrink-0 transition-[opacity,transform] duration-300 hover:opacity-90 active:scale-95"
           >
             <img
               src={logoImg}
@@ -30,9 +48,9 @@ export function Footer() {
               height={48}
               loading="lazy"
               decoding="async"
-              className="h-8 w-auto invert transition-opacity hover:opacity-85 sm:h-12"
+              className="h-8 w-auto invert sm:h-12"
             />
-          </a>
+          </Link>
 
           <p className="mt-3 text-xs text-ink-foreground/75 sm:text-sm">
             The Ridge Realty Group • Pahrump, Nevada
@@ -63,13 +81,9 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Visit Marci Metzger on ${s.name}`}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-ink-foreground/80 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white active:scale-95 active:bg-primary active:text-white sm:h-11 sm:w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-ink-foreground/80 transition-all duration-300 hover:bg-primary hover:text-white active:bg-primary active:text-white sm:h-11 sm:w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                <FontAwesomeIcon
-                  icon={s.icon}
-                  className="h-3.5 w-3.5 sm:h-4 sm:w-4"
-                  aria-hidden="true"
-                />
+                <SocialIcon icon={s.icon} />
               </a>
             ))}
           </div>
